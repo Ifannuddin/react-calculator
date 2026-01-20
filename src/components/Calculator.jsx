@@ -42,6 +42,9 @@ function Calculator() {
       case '×':
         return firstValue * secondValue;
       case '÷':
+        if (secondValue === 0) {
+          return firstValue;
+        }
         return firstValue / secondValue;
       default:
         return secondValue;
