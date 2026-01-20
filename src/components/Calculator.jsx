@@ -8,6 +8,11 @@ function Calculator() {
   const [waitingForOperand, setWaitingForOperand] = useState(false);
 
   const handleNumberClick = (num) => {
+    if (display === 'Error') {
+      setDisplay(String(num));
+      return;
+    }
+    
     if (waitingForOperand) {
       setDisplay(String(num));
       setWaitingForOperand(false);
@@ -17,6 +22,10 @@ function Calculator() {
   };
 
   const handleOperationClick = (nextOperation) => {
+    if (display === 'Error') {
+      return;
+    }
+    
     const inputValue = parseFloat(display);
 
     if (previousValue === null) {
@@ -24,6 +33,14 @@ function Calculator() {
     } else if (operation) {
       const currentValue = previousValue || 0;
       const newValue = performOperation(currentValue, inputValue, operation);
+
+      if (newValue === 'Error') {
+        setDisplay('Error');
+        setPreviousValue(null);
+        setOperation(null);
+        setWaitingForOperand(true);
+        return;
+      }
 
       setDisplay(String(newValue));
       setPreviousValue(newValue);
@@ -43,7 +60,7 @@ function Calculator() {
         return firstValue * secondValue;
       case '÷':
         if (secondValue === 0) {
-          return firstValue;
+          return 'Error';
         }
         return firstValue / secondValue;
       default:
@@ -52,6 +69,10 @@ function Calculator() {
   };
 
   const handleEquals = () => {
+    if (display === 'Error') {
+      return;
+    }
+    
     const inputValue = parseFloat(display);
 
     if (previousValue !== null && operation) {
