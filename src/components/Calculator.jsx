@@ -77,6 +77,15 @@ function Calculator() {
 
     if (previousValue !== null && operation) {
       const newValue = performOperation(previousValue, inputValue, operation);
+      
+      if (newValue === 'Error') {
+        setDisplay('Error');
+        setPreviousValue(null);
+        setOperation(null);
+        setWaitingForOperand(true);
+        return;
+      }
+      
       setDisplay(String(newValue));
       setPreviousValue(null);
       setOperation(null);
@@ -92,6 +101,10 @@ function Calculator() {
   };
 
   const handleDecimal = () => {
+    if (display === 'Error') {
+      return;
+    }
+    
     if (waitingForOperand) {
       setDisplay('0.');
       setWaitingForOperand(false);
